@@ -1,4 +1,4 @@
-import { Controller, Body, Post, UseGuards, Request, HttpCode, Get, Delete, } from '@nestjs/common';
+import { Controller, Body, Post, UseGuards, Request, HttpCode, Get, Delete, Req, } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from '../users/users.service';
 import { Logger } from 'src/utils/logger/logger.service';
@@ -18,23 +18,23 @@ export class AuthController {
   private readonly logger = new Logger(AuthController.name);
   constructor(private authService: AuthService) { }
 
-  @Post('login')
-  @UseGuards(AuthGuard('local'))
-  @HttpCode(200)
-  async login(@Body() user: LoginDto, @Request() req) {
-    const route = EndPoint.LOGIN;
-    console.log(user, req)
-    this.logger.verbose({ endPoint: route, request: user, message: 'Calling login api controller' });
+  // @Post('login')
+  // @UseGuards(AuthGuard('local'))
+  // @HttpCode(200)
+  // async login(@Body() user: LoginDto, @Request() req) {
+  //   const route = EndPoint.LOGIN;
+  //   console.log(user, req)
+  //   this.logger.verbose({ endPoint: route, request: user, message: 'Calling login api controller' });
 
-    let loginInfo = await this.authService.login(user);
+  //   let loginInfo = await this.authService.login(user);
 
-    this.logger.verbose({
-      endPoint: route,
-      response: loginInfo,
-      message: 'login api controller response',
-    });
-    return loginInfo
-  }
+  //   this.logger.verbose({
+  //     endPoint: route,
+  //     response: loginInfo,
+  //     message: 'login api controller response',
+  //   });
+  //   return loginInfo
+  // }
 
   @Post('signup')
   @HttpCode(200)
@@ -52,18 +52,14 @@ export class AuthController {
     return result
   }
 
-  // 	@Delete('logOut')
-  // 	@UseGuards(AuthGuard('jwt'))
-  // 	async logOut(@Request() req) {
-  // 		const route = EndPoint.LOG_OUT;
-  // 		this.logger.verbose({ endPoint: route, request: req.user, message: 'Calling logout api controller' });
-  // 		let result = await this.authService.logout(req);
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Req() req) { }
 
-  // 		this.logger.verbose({
-  // 			endPoint: route,
-  // 			response: result,
-  // 			message: 'logout api controller response',
-  // 		});
-  // 		return result
-  // 	}
+  @Get('google/redirect')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req) {
+    return await this.authService.googleLogin(req?.user)
+  }
+
 }

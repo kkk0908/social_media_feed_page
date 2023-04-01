@@ -23,26 +23,31 @@ export class AuthService {
     return this.userService.signUp(userDetails)
   }
 
-  async login(loginDetails: LoginDto) {
-    return this.userService.login(loginDetails)
-  }
+  // async login(loginDetails: LoginDto) {
+  //   return this.userService.login(loginDetails)
+  // }
 
-  async validateUser(username: string, pass: string) {
-    // find if user exist with this email
-    const user = await this.userService.findOneUserByEmail(username);
-    if (!user) {
-      return null;
-    }
+  // async validateUser(username: string, pass: string) {
+  //   // find if user exist with this email
+  //   const user = await this.userService.findOneUserByEmail(username);
+  //   if (!user) {
+  //     return null;
+  //   }
 
-    // find if user password match
-    const match = await this.utilService.comparePassword(pass, user.password);
-    if (!match) {
-      return null;
-    }
+  //   // find if user password match
+  //   const match = await this.utilService.comparePassword(pass, user.password);
+  //   if (!match) {
+  //     return null;
+  //   }
 
-    // tslint:disable-next-line: no-string-literal
-    const { password, ...result } = user
-    return result;
+  //   // tslint:disable-next-line: no-string-literal
+  //   const { ...result } = user
+  //   return result;
+  // }
+
+  async googleLogin(req) {
+    console.log(">>>>>>>>req ", req)
+    return await this.userService.loginByGoogle(req)
   }
 
 }

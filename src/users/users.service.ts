@@ -40,14 +40,36 @@ export class UsersService {
     }
   }
 
-  async login(createUserDto: CreateUserDto): Promise<{ message: string, data: any }> {
+  // async login(createUserDto: CreateUserDto): Promise<{ message: string, data: any }> {
+  //   try {
+  //     let existedUser = await this.userModel.findOne({ email: createUserDto.email })
+  //     if (!existedUser) throw new BadRequestException("User Not Found!")
+
+  //     if (!bcrypt.compareSync(createUserDto.password, existedUser.password)) throw new BadRequestException("Incorrect Password!")
+
+  //     let token = this.jwtService.sign({ email: existedUser.email })
+
+  //     return { data: { token, email: createUserDto.email }, message: messages.SUCCESS.CREATE }
+
+  //   } catch (error) {
+  //     console.log(error)
+  //     if (error.error !== 500) {
+  //       return error
+  //     } else {
+  //       throw new InternalServerErrorException(messages.FAILED.INTERNAL_SERVER_ERROR)
+  //     }
+  //   }
+  // }
+
+  async loginByGoogle(createUserDto: CreateUserDto): Promise<{ message: string, data: any }> {
     try {
-      let existedUser = await this.userModel.findOne({ email: createUserDto.email })
-      if (!existedUser) throw new BadRequestException("User Not Found!")
-
-      if (!bcrypt.compareSync(createUserDto.password, existedUser.password)) throw new BadRequestException("Incorrect Password!")
-
-      let token = this.jwtService.sign({ email: existedUser.email })
+      let user = await this.userModel.findOne({ email: createUserDto.email })
+      if (!user) {
+        user = await this.userModel.create(createUserDto)
+        console.log(">>>>>>>>>>>", user)
+      }
+      const { email, fullName, } = user
+      let token = this.jwtService.sign({ email, fullName })
 
       return { data: { token, email: createUserDto.email }, message: messages.SUCCESS.CREATE }
 

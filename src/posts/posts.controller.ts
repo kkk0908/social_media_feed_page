@@ -13,13 +13,11 @@ export class PostsController {
   @Post()
   @UseGuards(AuthGuard('jwt'))
   createPost(@Body() createPostDto: CreatePostDto, @Request() req) {
+    console.log(req.user)
     return this.postsService.createPost(createPostDto, req.user?.email);
   }
 
-
-
   @Get()
-  @UseGuards(AuthGuard('jwt'))
   findAllPosts() {
     return this.postsService.findAllPosts();
   }
@@ -29,13 +27,15 @@ export class PostsController {
     return this.postsService.findOnePost(id);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-  //   return this.postsService.update(+id, updatePostDto);
-  // }
+  @Patch(':id')
+  @UseGuards(AuthGuard('jwt'))
+  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+    return this.postsService.updatePost(id, updatePostDto);
+  }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.postsService.remove(+id);
-  // }
+  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
+  remove(@Param('id') id: string) {
+    return this.postsService.deletePost(id);
+  }
 }

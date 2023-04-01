@@ -11,6 +11,7 @@ import { UsersService } from 'src/users/users.service';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { UtilService } from 'src/utils/utils.service';
+import { GoogleStrategy } from './google.strategy';
 
 @Module({
   imports: [PassportModule,
@@ -32,6 +33,8 @@ import { UtilService } from 'src/utils/utils.service';
     LocalStrategy,
     JwtStrategy,
     UsersService,
-    UtilService,]
+    UtilService,
+    GoogleStrategy
+  ]
 })
 export class AuthModule { }

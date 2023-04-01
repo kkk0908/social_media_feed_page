@@ -9,12 +9,12 @@ export class User {
 	email: string;
 
 	@Prop({ required: true })
-	password: string;
+	fullName: string;
 
-	@Prop({ required: true })
-	userName: string;
+	@Prop({ required: false })
+	photo: string;
 
-	@Prop({ required: true })
+	@Prop({ required: true, default: Date.now() })
 	createdAt: Date;
 
 	@Prop({ required: false })

@@ -57,4 +57,41 @@ export class PostsService {
       }
     }
   }
+
+  async deletePost(id: string): Promise<{ message: string }> {
+    try {
+      if (!await this.utilService.checkValidMongoDBId(id)) throw new NotFoundException(messages.FAILED.INVALID_ID)
+      let postObj = await this.postModel.findOne({ _id: id });
+      if (!postObj) throw new NotFoundException(messages.FAILED.NOT_FOUND)
+      let deletedPost = await this.postModel.deleteOne({ _id: id });
+      if (deletedPost?.deletedCount > 0) return { message: messages.SUCCESS.DELETE }
+      throw new InternalServerErrorException(messages.FAILED.INTERNAL_SERVER_ERROR)
+    } catch (error) {
+      if (error.error !== 500) {
+        return error
+      } else {
+        throw new InternalServerErrorException(messages.FAILED.INTERNAL_SERVER_ERROR)
+      }
+    }
+  }
+
+  async updatePost(id: string, updatePostDto: UpdatePostDto): Promise<{ data: any, message: string }> {
+    try {
+      if (!await this.utilService.checkValidMongoDBId(id)) throw new NotFoundException(messages.FAILED.INVALID_ID)
+      let existedPost = await this.postModel.findOne({ _id: id });
+      if (!existedPost) throw new NotFoundException(messages.FAILED.NOT_FOUND)
+      let updatedPost = await this.postModel.updateOne({ _id: id }, updatePostDto, { new: true });
+      return { data: updatedPost, message: messages.SUCCESS.UPDATE }
+
+    } catch (error) {
+      if (error.error !== 500) {
+        return error
+      } else {
+        throw new InternalServerErrorException(messages.FAILED.INTERNAL_SERVER_ERROR)
+      }
+    }
+  }
+
+
+
 }
