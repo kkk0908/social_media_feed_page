@@ -1,11 +1,15 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { AuthGuard } from '@nestjs/passport';
+
 
 
 @Controller('posts')
+@ApiTags('posts')
+@ApiBearerAuth()
 export class PostsController {
   constructor(private readonly postsService: PostsService) { }
 
@@ -39,3 +43,5 @@ export class PostsController {
     return this.postsService.deletePost(id);
   }
 }
+
+
