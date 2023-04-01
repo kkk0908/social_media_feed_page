@@ -5,7 +5,7 @@ export type PostDocument = Posts & Document;
 
 @Schema()
 export class Posts {
-	@Prop({ required: true, unique: true })
+	@Prop({ required: true, unique: true, index: true }) // applied indexing on email field
 	title: string;
 
 	@Prop({ required: true })

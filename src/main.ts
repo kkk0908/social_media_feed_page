@@ -8,6 +8,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 // Import the root AppModule
 import { AppModule } from './app.module';
+import { Cluster } from './app-cluster.service';
 
 // Define an async function to bootstrap the NestJS application
 async function bootstrap() {
@@ -38,3 +39,5 @@ async function bootstrap() {
 
 // Call the bootstrap function to start the NestJS application
 bootstrap();
+// use 4 workers
+//Cluster.register(4, bootstrap); // I tried with cluster but It was taking much time campared to normal. while fetching Query

@@ -13,7 +13,7 @@ export class PostsService {
   constructor(@InjectModel(Posts.name) private readonly postModel: Model<PostDocument>,
     private readonly utilService: UtilService) { }
 
-  async createPost(createPostDto: CreatePostDto, createdBy: string): Promise<{ data: Posts, message: string }> {
+  async createPost(createPostDto: CreatePostDto, createdBy: string): Promise<{ message: string }> {
     try {
       let isExistedTitle = await this.postModel.findOne({ title: createPostDto.title })
       if (isExistedTitle) throw new BadRequestException(`${createPostDto.title} Title is already used!`)
@@ -24,7 +24,7 @@ export class PostsService {
         updatedAt: new Date(),
       }).save();
       console.log(result)
-      return { data: result, message: messages.SUCCESS.CREATE }
+      return { message: messages.SUCCESS.CREATE }
     } catch (error) {
       console.log(error)
       if (error.error !== 500) {
@@ -35,9 +35,11 @@ export class PostsService {
     }
   }
 
-  async findAllPosts(): Promise<Posts[]> {
+  async findAllPosts(query: any): Promise<Posts[]> {
     try {
-      return await this.postModel.find().exec();
+      let limit = parseInt(query?.limit);
+      let skip = (parseInt(query?.page) - 1) * limit || 0;
+      return await this.postModel.find().limit(limit || 20).skip(skip || 0).lean().select(['title', 'contents', "_id"]);
     } catch (error) {
       throw new InternalServerErrorException(messages.FAILED.INTERNAL_SERVER_ERROR)
     }
@@ -46,7 +48,7 @@ export class PostsService {
   async findOnePost(id: string): Promise<Posts> {
     try {
       if (!await this.utilService.checkValidMongoDBId(id)) throw new NotFoundException(messages.FAILED.INVALID_ID)
-      let postObj = await this.postModel.findById(id).exec();
+      let postObj = await this.postModel.findById(id).lean();
       if (postObj) return postObj
       throw new NotFoundException(messages.FAILED.NOT_FOUND)
     } catch (error) {

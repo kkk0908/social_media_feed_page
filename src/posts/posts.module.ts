@@ -1,4 +1,4 @@
-import { Module, Post } from '@nestjs/common';
+import { CacheModule, Module, Post } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -10,6 +10,8 @@ import { UtilService } from 'src/utils/utils.service';
   providers: [PostsService, UtilService],
   imports: [MongooseModule.forFeature([
     { name: Posts.name, schema: PostSchema },
-  ]),]
+  ]),
+  CacheModule.register(),
+  ]
 })
 export class PostsModule { }
