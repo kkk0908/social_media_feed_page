@@ -1,0 +1,10 @@
+[
+  {
+    "_id": { "$oid": "642879eedf2bddf38b7db77e" },
+    "email": "devsatish1994@gmail.com",
+    "fullName": "satish kumar",
+    "photo": "https://lh3.googleusercontent.com/a/AGNmyxY5-QB-XHiz9vAb1lZqW7AqBXiy4JbUIFRI8cTS=s96-c",
+    "createdAt": { "$date": { "$numberLong": "1680318438515" } },
+    "__v": { "$numberInt": "0" }
+  }
+]
