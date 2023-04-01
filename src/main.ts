@@ -1,10 +1,13 @@
 // Import the 'dotenv' package to read environmental variables from a .env file
 import * as dotenv from 'dotenv';
+import * as csurf from 'csurf';
 dotenv.config();
 
 // Import NestJS dependencies
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+// Import Helmet
+import helmet from 'helmet';
 
 // Import the root AppModule
 import { AppModule } from './app.module';
@@ -14,6 +17,10 @@ import { Cluster } from './app-cluster.service';
 async function bootstrap() {
   // Create an instance of the NestJS application
   const app = await NestFactory.create(AppModule);
+
+  app.use(helmet());
+  //app.use(csurf());
+
 
   // Define Swagger documentation options
   const config = new DocumentBuilder()
