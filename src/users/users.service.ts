@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument } from './entities/user.entity';
 import * as messages from '../constants/messages.json';
-import { UtilService } from 'src/utils/utils.service';
+import { UtilService } from '../utils/utils.service';
 
 
 @Injectable()

@@ -3,7 +3,7 @@ import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Posts, PostSchema } from './entities/post.entity';
-import { UtilService } from 'src/utils/utils.service';
+import { UtilService } from '../utils/utils.service';
 
 @Module({
   controllers: [PostsController],

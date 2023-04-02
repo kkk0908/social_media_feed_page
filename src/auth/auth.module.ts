@@ -3,15 +3,15 @@ import { PassportModule } from '@nestjs/passport';
 import { ThrottlerModule } from '@nestjs/throttler'
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from 'src/users/entities/user.entity';
+import { User, UserSchema } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from '../users/users.module';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
-import { UtilService } from 'src/utils/utils.service';
+import { UtilService } from '../utils/utils.service';
 import { GoogleStrategy } from './google.strategy';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
