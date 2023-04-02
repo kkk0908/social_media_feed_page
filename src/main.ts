@@ -46,6 +46,6 @@ async function bootstrap() {
 }
 
 // Call the bootstrap function to start the NestJS application
-bootstrap();
+//bootstrap();
 // use 4 workers
-//Cluster.register(4, bootstrap); // I tried with cluster but It was taking much time campared to normal. while fetching Query
+Cluster.register(4, bootstrap); // I tried with cluster but It was taking much time campared to normal. while fetching Query
