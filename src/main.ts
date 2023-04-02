@@ -1,6 +1,6 @@
 // Import the 'dotenv' package to read environmental variables from a .env file
 import * as dotenv from 'dotenv';
-import * as csurf from 'csurf';
+import { urlencoded, json } from 'express';
 dotenv.config();
 
 // Import NestJS dependencies
@@ -19,7 +19,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(helmet());
-  //app.use(csurf());
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
 
 
   // Define Swagger documentation options
