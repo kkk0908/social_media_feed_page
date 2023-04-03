@@ -1,4 +1,4 @@
-## STEPS
+## STEPS to run and builds
 
 ```
 1. git clone https://github.com/kkk0908/jk-blog
@@ -8,6 +8,18 @@
 4. npm run start or npm run start:dev
 5. npm run build
 6. open swagger link http://localhost:3000/api
+```
+
+## UNIT TESTING COMMAND
+
+```
+npm run test:watch
+```
+
+## e2e TESTING COMMAND
+
+```
+npm run test:e2e:watch
 ```
 
 ## 0AUTH setup
