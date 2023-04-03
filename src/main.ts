@@ -39,10 +39,12 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   // Start listening on the specified port, or 3000 if none is provided
-  await app.listen(process.env.PORT || 3000).catch(error => {
-    // If there is an error starting the server, log the error message
-    console.log('Something went wrong: ' + JSON.stringify(error));
-  });
+  await app.listen(process.env.PORT || 3000)
+    .then(() => console.info('API Document Link', `http://localhost:${process.env.PORT || 3000}/api`))
+    .catch(error => {
+      // If there is an error starting the server, log the error message
+      console.error('Something went wrong: ' + JSON.stringify(error));
+    });
 }
 
 // Call the bootstrap function to start the NestJS application
