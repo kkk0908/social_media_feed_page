@@ -6,6 +6,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Posts, PostDocument } from './entities/post.entity';
 import * as messages from '../constants/messages.json'
+import { QueryPostDto } from './dto/query-post.dto';
 
 
 @Injectable()
@@ -23,10 +24,8 @@ export class PostsService {
         createdAt: new Date(),
         updatedAt: new Date(),
       }).save();
-      console.log(result)
       return { message: messages.SUCCESS.CREATE }
     } catch (error) {
-      console.log(error)
       if (error.error !== 500) {
         return error
       } else {
@@ -35,12 +34,11 @@ export class PostsService {
     }
   }
 
-  async findAllPosts(query: any): Promise<Posts[]> {
+  async findAllPosts(query: QueryPostDto): Promise<Posts[]> {
     try {
-      let limit = parseInt(query?.limit);
-      let skip = (parseInt(query?.page) - 1) * limit || 0;
-      return await this.postModel.find().limit(limit || 20).skip(skip || 0).lean().select(['title', 'contents', "_id"]);
+      return await this.postModel.find().limit(query.limit).skip(query.skip).lean().select(['title', 'contents', "_id"]);
     } catch (error) {
+      console.log(error)
       throw new InternalServerErrorException(messages.FAILED.INTERNAL_SERVER_ERROR)
     }
   }

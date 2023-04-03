@@ -11,7 +11,7 @@ import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
-
+    DatabaseModule,
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 50,
@@ -19,7 +19,7 @@ import { DatabaseModule } from './database/database.module';
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule, UsersModule,
     PostsModule,
-    DatabaseModule
+
   ],
   controllers: [AppController],
   providers: [AppService, {

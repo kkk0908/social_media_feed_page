@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, UseInterceptors, ClassSerializerInterceptor, Query } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { QueryPostDto } from './dto/query-post.dto';
 
 
 
@@ -24,8 +25,8 @@ export class PostsController {
 
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
-  findAllPosts(@Request() req) {
-    return this.postsService.findAllPosts(req.query);
+  findAllPosts(@Query() query: QueryPostDto) {
+    return this.postsService.findAllPosts(query);
   }
 
   @Get(':id')
