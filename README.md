@@ -2,6 +2,7 @@
 
 ```
 1. git clone https://github.com/kkk0908/jk-blog
+2. cd jk-blog
 2. npm install
 3. take keys from the .env.sample file and provide respective value
 4. npm run start or npm run start:dev
