@@ -11,8 +11,7 @@ import { UtilService } from '../utils/utils.service';
   controllers: [UsersController],
   providers: [UsersService, UtilService, JwtService],
   imports: [MongooseModule.forFeature([
-    { name: User.name, schema: UserSchema },
-    // { name: Token.name, schema: TokenSchema },
+    { name: User.name, schema: UserSchema }
   ]),]
 })
 export class UsersModule { }

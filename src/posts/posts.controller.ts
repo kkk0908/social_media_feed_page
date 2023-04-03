@@ -19,12 +19,11 @@ export class PostsController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(ClassSerializerInterceptor)
   createPost(@Body() createPostDto: CreatePostDto, @Request() req) {
-    console.log(req.user)
     return this.postsService.createPost(createPostDto, req.user?.email);
   }
 
   @Get()
-  // @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(ClassSerializerInterceptor)
   findAllPosts(@Request() req) {
     return this.postsService.findAllPosts(req.query);
   }
@@ -38,7 +37,7 @@ export class PostsController {
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(ClassSerializerInterceptor)
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+  updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.updatePost(id, updatePostDto);
   }
 

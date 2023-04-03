@@ -4,12 +4,14 @@ import { UsersService } from './users.service';
 
 describe('UsersController', () => {
   let controller: UsersController;
-
+  const mockPostsService = {}
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
       providers: [UsersService],
-    }).compile();
+    }).overrideProvider(UsersService)
+      .useValue(mockPostsService)
+      .compile();
 
     controller = module.get<UsersController>(UsersController);
   });
