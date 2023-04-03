@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { UtilService } from '../utils/utils.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -36,7 +36,9 @@ export class PostsService {
 
   async findAllPosts(query: QueryPostDto): Promise<Posts[]> {
     try {
-      return await this.postModel.find().limit(query.limit).skip(query.skip).lean().select(['title', 'contents', "_id"]);
+      let result = await this.postModel.find().limit(query.limit).skip(query.skip).lean().select(['_id', "title", 'contents'])
+      result = JSON.parse(JSON.stringify(result))
+      return result
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException(messages.FAILED.INTERNAL_SERVER_ERROR)
