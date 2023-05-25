@@ -36,7 +36,7 @@ export class PostsService {
 
   async findAllPosts(query: QueryPostDto): Promise<Posts[]> {
     try {
-      let result = await this.postModel.find().limit(query.limit).skip(query.skip).lean().select(['_id', "title", 'contents'])
+      let result = await this.postModel.find().limit(query.limit).skip(query.skip).lean()
       result = JSON.parse(JSON.stringify(result))
       return result
     } catch (error) {

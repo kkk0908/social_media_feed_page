@@ -11,6 +11,9 @@ export class Posts {
 	@Prop({ required: true })
 	contents: string;
 
+    @Prop({ required: false })
+	image: string;
+
 	@Prop({ required: false })
 	createdBy: string;
 
@@ -19,6 +22,15 @@ export class Posts {
 
 	@Prop({ required: false })
 	updateAt: Date;
+
+    @Prop({ required: false , default:0})
+	likes: number;
+
+    @Prop({ required: false , default:0})
+	dislike: number;
+
+    @Prop({ required: [String], length:3})
+	tags: String[];
 
 }
 
