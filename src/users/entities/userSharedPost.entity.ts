@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types} from 'mongoose';
 import { Posts } from '../../posts/entities/post.entity';
 
-export type UserSavedPostsDocument = UserSavedPosts & Document;
+export type UsersharedPostsDocument = UserSharedPosts & Document;
 
 @Schema()
-export class UserSavedPosts {
+export class UserSharedPosts {
 	@Prop({ type: [{type: Types.ObjectId, ref:'Posts'}] })
 	postId: Posts[];
 
@@ -19,4 +19,4 @@ export class UserSavedPosts {
 	updateAt: Date;
 }
 
-export const UserSavedPostsSchema = SchemaFactory.createForClass(UserSavedPosts);
+export const UserSharedPostsSchema = SchemaFactory.createForClass(UserSharedPosts);

@@ -5,6 +5,7 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { QueryPostDto } from './dto/query-post.dto';
+import { ActivityPostDto } from './dto/activity-post.dto';
 
 
 
@@ -51,9 +52,17 @@ export class PostsController {
   }
 
   @Get('/tag/:id')
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(ClassSerializerInterceptor)
   findPostsByTag(@Param('id') id: string, @Query() query: QueryPostDto ) {
     return this.postsService.findPostsByTag(id, query);
+  }
+
+  @Get('/activities/:id')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(ClassSerializerInterceptor)
+  activityOnPost(@Param('id') id: string, @Query() query: ActivityPostDto,  @Request() req ) {
+    return this.postsService.postActivities(id, query, req.user._id);
   }
 }
 

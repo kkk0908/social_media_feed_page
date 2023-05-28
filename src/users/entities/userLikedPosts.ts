@@ -10,7 +10,7 @@ export class UserLikedPosts {
 	@Prop({ type: [{type: Types.ObjectId, ref:'Posts'}] })
 	postId: Posts[];
 
-	@Prop({ type:{type: Types.ObjectId, ref: 'User'} })
+	@Prop({type: Types.ObjectId, ref: 'User'} )
 	userId: string;
 
 	@Prop({ required: true, default: Date.now() })
