@@ -21,7 +21,7 @@ export class PostsController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(ClassSerializerInterceptor)
   createPost(@Body() createPostDto: CreatePostDto, @Request() req) {
-    return this.postsService.createPost(createPostDto, req.user?.email);
+    return this.postsService.createPost(createPostDto, req.user?._id);
   }
 
   @Get()

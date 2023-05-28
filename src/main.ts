@@ -12,6 +12,7 @@ import helmet from 'helmet';
 // Import the root AppModule
 import { AppModule } from './app.module';
 import { Cluster } from './app-cluster.service';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 // Define an async function to bootstrap the NestJS application
 async function bootstrap() {
@@ -38,9 +39,19 @@ async function bootstrap() {
   // Mount Swagger UI and API docs on '/api' path
   SwaggerModule.setup('api', app, document);
 
+    // Enable CORS
+  const corsOptions: CorsOptions = {
+    origin: true, // Allow requests from any origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // Allow these HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  };
+  app.enableCors(corsOptions);
+
   // Start listening on the specified port, or 3000 if none is provided
-  await app.listen(process.env.PORT || 3000)
-    .then(() => console.info('API Document Link', `http://localhost:${process.env.PORT || 3000}/api`))
+  await app.listen(process.env.PORT || 4000)
+    .then(() => console.info('API Document Link', `http://localhost:${process.env.PORT || 4000}/api`))
     .catch(error => {
       // If there is an error starting the server, log the error message
       console.error('Something went wrong: ' + JSON.stringify(error));

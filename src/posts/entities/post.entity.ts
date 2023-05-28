@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Tags } from './tags.entity';
 import { Images } from './images.entity';
+import { User } from '../../users/entities/user.entity';
 
 export type PostDocument = Posts & Document;
 
@@ -13,11 +14,11 @@ export class Posts {
 	@Prop({ required: true })
 	contents: string;
 
-    @Prop({ type: [{type:Types.ObjectId, ref: "images"}] })
+    @Prop({ type: [{type:Types.ObjectId, ref: "Images"}] })
 	images: Images[];
 
-	@Prop({ required: false })
-	createdBy: string;
+	@Prop({ type:[{type:Types.ObjectId, ref:"User"}] })
+	createdBy: User[];
 
 	@Prop({ required: true })
 	createdAt: Date;

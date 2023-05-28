@@ -61,7 +61,7 @@ export class PostsService {
 
   async findAllPosts(query: QueryPostDto): Promise<Posts[]> {
     try {
-      let result = await this.postModel.find().populate(["tags"]).limit(query.limit).skip(query.skip).lean()
+      let result = await this.postModel.find().populate([ "tags", "createdBy", "images"]).limit(query.limit).skip(query.skip).lean()
       result = JSON.parse(JSON.stringify(result))
       return result
     } catch (error) {
