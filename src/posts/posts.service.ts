@@ -27,16 +27,19 @@ export class PostsService {
     private readonly utilService: UtilService) { }
 
   async createPost(createPostDto: CreatePostDto, createdBy: string): Promise<{ message: string , result?:any}> {
+    const session = await this.postModel.startSession();
+    session.startTransaction();
+
     try {
-      let isExistedTitle = await this.postModel.findOne({ title: createPostDto.title })
+      let isExistedTitle = await this.postModel.findOne({ title: createPostDto.title }).session(session);
       if (isExistedTitle) throw new BadRequestException(`${createPostDto.title} Title is already used!`)
       let images =  createPostDto.images.map(img=>{return {file:img}})
-      let insertedImages = await this.imagesModel.insertMany(images)
+      let insertedImages = await this.imagesModel.insertMany(images, {session})
        const insertedImgId = insertedImages.map(img=>img._id)
       let tagLists = [];
        let tagsId = []
       for(let tag of createPostDto.tags) {
-       let IsTagExist = await this.tagsModel.findOne({name:tag});
+       let IsTagExist = await this.tagsModel.findOne({name:tag}).session(session);;
        if(!IsTagExist){
         tagLists.push({name:tag})
         } else {
@@ -44,25 +47,29 @@ export class PostsService {
       }
       }
 
-      let savedTags = await this.tagsModel.insertMany(tagLists);
+      let savedTags = await this.tagsModel.insertMany(tagLists, {session})
       let tagsIdList = savedTags.map(tag=>tag._id)
 
-      let result: any = await new this.postModel({
+      let result: any = await this.postModel.create([{
         ...createPostDto,
         images: insertedImgId,
         tags:[...tagsId,...tagsIdList],
         createdBy: createdBy,
         createdAt: new Date(),
         updatedAt: new Date(),
-      }).save();
-
+      }], {session})
+      await session.commitTransaction();
       return { message: messages.SUCCESS.CREATE }
     } catch (error) {
+      console.log(error)
+      await session.abortTransaction();
       if (error.error !== 500) {
-        return error._message
+        return error
       } else {
-        throw new InternalServerErrorException(messages.FAILED.INTERNAL_SERVER_ERROR)
+        return new InternalServerErrorException(messages.FAILED.INTERNAL_SERVER_ERROR)
       }
+    } finally {
+      session.endSession();
     }
   }
 
@@ -143,58 +150,63 @@ export class PostsService {
   }
 
   async postActivities(id: string, query: ActivityPostDto, userId:string): Promise<{message:string}> {
+     const session = await this.postModel.startSession();
+     session.startTransaction();
     try {
       if (!await this.utilService.checkValidMongoDBId(id)) throw new NotFoundException(messages.FAILED.INVALID_ID)
-      let existedPosts = await this.postModel.findOne({_id:id});
+      let existedPosts = await this.postModel.findOne({_id:id}).session(session);
       if(!existedPosts) throw new BadRequestException(messages.FAILED.NOT_FOUND);
 
       if(query.Type=="like") {
-       let isUserLikedThePost = await this.userLikedPostModel.findOne({userId :userId})
+       let isUserLikedThePost = await this.userLikedPostModel.findOne({userId :userId}).session(session);
        if(!isUserLikedThePost){
-        await this.userLikedPostModel.create({postId:id, userId :userId})
-        await this.postModel.updateOne({_id:id}, {likesCount:existedPosts.likesCount+1})
+        await this.userLikedPostModel.create([{postId:id, userId :userId}], {session})
+        await this.postModel.updateOne({_id:id}, {likesCount:existedPosts.likesCount+1}, {session})
       }else{
        let likedIdByUser:any = isUserLikedThePost.postId
        if(!likedIdByUser.includes(id)){
-        await this.userLikedPostModel.updateOne({userId :userId}, {postId:[...likedIdByUser, id]})
-         await this.postModel.updateOne({_id:id}, {likesCount:existedPosts.likesCount+1})
+        await this.userLikedPostModel.updateOne({userId :userId}, {postId:[...likedIdByUser, id]}, {session})
+         await this.postModel.updateOne({_id:id}, {likesCount:existedPosts.likesCount+1}, {session})
       }
       }
      }
     else if(query.Type=="save"){
-       let isUserSavedThePost = await this.userSavedPostModel.findOne({userId :userId})
+       let isUserSavedThePost = await this.userSavedPostModel.findOne({userId :userId}).session(session);
        if(!isUserSavedThePost){
-        await this.userSavedPostModel.create({postId:id, userId :userId})
+        await this.userSavedPostModel.create([{postId:id, userId :userId}], {session})
         await this.postModel.updateOne({_id:id}, {saveCount:existedPosts.saveCount+1})
       } else{
            let savedIdByUser:any = isUserSavedThePost.postId
             if(!savedIdByUser.includes(id)){
-                await this.userLikedPostModel.updateOne({userId :userId}, {postId:[...savedIdByUser, id]})
-                await this.postModel.updateOne({_id:id}, {saveCount:existedPosts.saveCount+1})
+                await this.userLikedPostModel.updateOne({userId :userId}, {postId:[...savedIdByUser, id]}, {session})
+                await this.postModel.updateOne({_id:id}, {saveCount:existedPosts.saveCount+1}, {session})
            }
       }
     }
    else{
-      let isUserSharedThePost = await this.userSharedPostModel.findOne({userId :userId})
+      let isUserSharedThePost = await this.userSharedPostModel.findOne({userId :userId}).session(session);
        if(!isUserSharedThePost){
-        await this.userSharedPostModel.create({postId:id, userId :userId})
-        await this.postModel.updateOne({_id:id}, {shareCount:existedPosts.shareCount+1})
+        await this.userSharedPostModel.create([{postId:id, userId :userId}], {session})
+        await this.postModel.updateOne({_id:id}, {shareCount:existedPosts.shareCount+1}, {session})
       } else{
            let savedIdByUser:any = isUserSharedThePost.postId
             if(!savedIdByUser.includes(id)){
-                await this.userSharedPostModel.updateOne({userId :userId}, {postId:[...savedIdByUser, id]})
-                await this.postModel.updateOne({_id:id}, {shareCount:existedPosts.shareCount+1})
+                await this.userSharedPostModel.updateOne({userId :userId}, {postId:[...savedIdByUser, id]}, {session})
+                await this.postModel.updateOne({_id:id}, {shareCount:existedPosts.shareCount+1}, {session})
            }
       }
    }
-
+      await session.commitTransaction();
       return  {message: messages.SUCCESS.UPDATE}
     } catch (error) {
+      await session.abortTransaction();
       if (error.error !== 500) {
         return error
       } else {
         throw new InternalServerErrorException(messages.FAILED.INTERNAL_SERVER_ERROR)
       }
-    }
+    } finally{
+     session.endSession()
+   }
   }
 }
