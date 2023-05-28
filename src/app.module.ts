@@ -19,7 +19,6 @@ import { DatabaseModule } from './database/database.module';
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule, UsersModule,
     PostsModule,
-
   ],
   controllers: [AppController],
   providers: [AppService, {

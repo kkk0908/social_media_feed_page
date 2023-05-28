@@ -12,4 +12,7 @@ export class CreateUserDto {
     @IsNotEmpty()
     @MinLength(2)
 	fullName: string;
+
+    @IsString()
+	photo: string;
 }

@@ -1,11 +1,13 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
+import bcrypt from "bcrypt";
 import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument } from './entities/user.entity';
 import * as messages from '../constants/messages.json';
 import { UtilService } from '../utils/utils.service';
+import { LoginDto } from './dto/login.dto';
 
 
 @Injectable()
@@ -86,4 +88,38 @@ export class UsersService {
       return null;
     }
   }
+
+async signUp(user:CreateUserDto): Promise<any>{
+  try {
+     user.password = bcrypt.hashSync(user.password, 10);
+     let result = this.userModel.create({...user, isAuth0:false})
+     return result
+  } catch (error) {
+     if (error.status !== 500) {
+        return error;
+      } else {
+        throw new InternalServerErrorException(messages.FAILED.INTERNAL_SERVER_ERROR);
+      }
+  }
+}
+
+async login(user:LoginDto): Promise<any>{
+  try {
+    let isRegisteredUser = await this.userModel.findOne({email: user.email})
+    if(!isRegisteredUser) throw new UnauthorizedException(messages.FAILED.UNAUTHORIZED);
+    let isPasswordValid = await bcrypt.compare(user.password, isRegisteredUser.password);
+    if(!isPasswordValid) throw new UnauthorizedException(messages.FAILED.UNAUTHORIZED);
+    const {email, fullName, _id} = isRegisteredUser
+    const token = this.jwtService.sign({ email, fullName, _id }, {expiresIn: process.env.TOKEN_EXPIRATION , secret: process.env.JWT_SECRET_KEY });
+    return { data: { token, email: user.email, id:_id }, message: messages.SUCCESS.LOGIN };
+  } catch (error) {
+    console.log(error)
+     if (error.status !== 500) {
+        return error;
+      } else {
+        throw new InternalServerErrorException(messages.FAILED.INTERNAL_SERVER_ERROR);
+      }
+  }
+}
+
 }
