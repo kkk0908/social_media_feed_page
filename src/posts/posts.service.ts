@@ -73,7 +73,7 @@ export class PostsService {
   async findOnePost(id: string): Promise<Posts> {
     try {
       if (!await this.utilService.checkValidMongoDBId(id)) throw new NotFoundException(messages.FAILED.INVALID_ID)
-      let postObj = await this.postModel.findById(id).lean().populate(["tags"]);
+      let postObj = await this.postModel.findById(id).lean().populate(["tags", "createdBy", "images"]);
       if (postObj) return JSON.parse(JSON.stringify(postObj))
       throw new NotFoundException(messages.FAILED.NOT_FOUND)
     } catch (error) {
