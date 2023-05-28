@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { Tags } from './tags.entity';
+import { Images } from './images.entity';
 
 export type PostDocument = Posts & Document;
 
@@ -11,8 +13,8 @@ export class Posts {
 	@Prop({ required: true })
 	contents: string;
 
-    @Prop({ required: false })
-	image: string;
+    @Prop({ type: [{type:Types.ObjectId, ref: "images"}] })
+	images: Images[];
 
 	@Prop({ required: false })
 	createdBy: string;
@@ -24,13 +26,23 @@ export class Posts {
 	updateAt: Date;
 
     @Prop({ required: false , default:0})
-	likes: number;
+	likesCount: number;
 
     @Prop({ required: false , default:0})
-	dislike: number;
+	shareCount: number;
 
-    @Prop({ required: [String], length:3})
-	tags: String[];
+    @Prop({ required: false , default:0})
+	saveCount: number;
+
+    @Prop({ required: false , default:0})
+	downloadCount: number;
+
+    @Prop({ type:[{ type: Types.ObjectId, ref: 'Tags' }] })
+	tags: Tags[];
+
+    @Prop({default:false})
+    isArchive : boolean
+
 
 }
 

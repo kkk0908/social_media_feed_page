@@ -1,6 +1,5 @@
 
-import { IsString, IsNotEmpty, MinLength, IsArray, minLength, maxLength } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsNotEmpty, MinLength, IsArray } from 'class-validator';
 export class CreatePostDto {
 	@IsString()
 	@IsNotEmpty()
@@ -11,12 +10,11 @@ export class CreatePostDto {
 	@IsNotEmpty()
 	contents: string;
 
-    @IsString()
-	image: string;
+    @IsArray()
+	images: string[];
 
     @IsArray()
-    @IsString()
-	tags: String[];
+	tags: string[];
 }
 
 

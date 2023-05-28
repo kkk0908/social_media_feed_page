@@ -13,6 +13,6 @@ export class QueryPostDto {
 	@Type(() => Number)
 	@IsNumber()
 	@Min(1)
-	limit?: number
+	limit?: number = 10
 
 }

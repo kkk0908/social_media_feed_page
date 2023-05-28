@@ -25,8 +25,8 @@ async function bootstrap() {
 
   // Define Swagger documentation options
   const config = new DocumentBuilder()
-    .setTitle('Blog App')
-    .setDescription('Blog APIs for JK company test')
+    .setTitle('Social Media Feed')
+    .setDescription('APIs for Social Media Feed')
     .setVersion('1.0')
     .addTag('Blog')
     .addBearerAuth()

@@ -48,6 +48,12 @@ export class PostsController {
   remove(@Param('id') id: string) {
     return this.postsService.deletePost(id);
   }
+
+  @Get('/tag/:id')
+  @UseInterceptors(ClassSerializerInterceptor)
+  findPostsByTag(@Param('id') id: string, @Query() query: QueryPostDto ) {
+    return this.postsService.findPostsByTag(id, query);
+  }
 }
 
 
