@@ -1,4 +1,4 @@
-import { Controller,Post, Body,UseGuards, UseInterceptors, ClassSerializerInterceptor , Request} from '@nestjs/common';
+import { Controller,Post, Body,UseGuards, UseInterceptors, ClassSerializerInterceptor , Request, UsePipes, ValidationPipe} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
@@ -8,6 +8,7 @@ import { LoginDto } from './dto/login.dto';
 
 @Controller('user')
 @ApiTags('user')
+@UseGuards(AuthGuard('local'))
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
@@ -17,7 +18,6 @@ export class UsersController {
   }
 
   @Post('login')
-  @UseGuards(AuthGuard('local'))
   login(@Body() cred: LoginDto, @Request() req) {
     return this.usersService.login(cred);
   }
