@@ -10,9 +10,9 @@ import { QueryPostDto } from './dto/query-post.dto';
 import { Tags, TagsDocument } from './entities/tags.entity';
 import { Images, ImagesDocument } from './entities/images.entity';
 import { ActivityPostDto } from './dto/activity-post.dto';
-import { UserLikedPosts, UserLikedPostsDocument } from 'src/users/entities/userLikedPosts';
-import { UserSavedPosts, UserSavedPostsDocument } from 'src/users/entities/userSavedPosts.entity';
-import { UserSharedPosts } from 'src/users/entities/userSharedPost.entity';
+import { UserLikedPosts, UserLikedPostsDocument } from '../users/entities/userLikedPosts';
+import { UserSavedPosts, UserSavedPostsDocument } from '../users/entities/userSavedPosts.entity';
+import { UserSharedPosts } from '../users/entities/userSharedPost.entity';
 
 
 @Injectable()

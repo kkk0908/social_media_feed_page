@@ -2,7 +2,6 @@ import { Controller,Post, Body,UseGuards, UseInterceptors, ClassSerializerInterc
 import { UsersService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { CreatePostDto } from 'src/posts/dto/create-post.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 
