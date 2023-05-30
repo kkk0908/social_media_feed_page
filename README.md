@@ -12,6 +12,7 @@
 
 ## LOGIN INFO
 ```
+VercelUrl: https://media-feed-app.vercel.app/
 Email: test@gmail.com
 password:123456
 ```
