@@ -15,7 +15,7 @@ import { Cluster } from './app-cluster.service';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 // Define an async function to bootstrap the NestJS application
-async function bootstrap() {
+export async function bootstrap() {
   // Create an instance of the NestJS application
   const app = await NestFactory.create(AppModule);
 
